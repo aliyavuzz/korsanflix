@@ -5,6 +5,8 @@
  * Returns combined results with a `media_type` field on each item.
  */
 
+export const runtime = 'edge';
+
 const TMDB_BASE = "https://api.themoviedb.org/3";
 
 export async function GET(request) {

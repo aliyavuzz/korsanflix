@@ -4,6 +4,7 @@
  * Proxies TMDB requests server-side so the API key stays secret.
  * Returns the raw TMDB JSON (results array with id, title, poster_path, etc.).
  */
+export const runtime = 'edge';
 
 const TMDB_BASE = "https://api.themoviedb.org/3";
 

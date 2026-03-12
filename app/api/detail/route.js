@@ -4,6 +4,7 @@
  * Film/dizi detaylarını ve YouTube trailer videolarını döner.
  * append_to_response=videos ile tek istekte hem detay hem videolar gelir.
  */
+export const runtime = 'edge';
 
 const TMDB_BASE = "https://api.themoviedb.org/3";
 
