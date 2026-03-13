@@ -8,6 +8,19 @@ const nextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Permissions-Policy",
+            value: "fullscreen=*",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

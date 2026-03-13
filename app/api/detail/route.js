@@ -1,8 +1,8 @@
 /**
  * GET /api/detail?id=12345&type=movie
- *
- * Film/dizi detaylarını ve YouTube trailer videolarını döner.
- * append_to_response=videos ile tek istekte hem detay hem videolar gelir.
+ * GET /api/detail?id=12345&type=tv&season=2  (fetch season episodes)
+ * GET /api/detail?id=12345&type=movie&similar=1
+ * GET /api/detail?id=12345&type=movie&recommendations=1
  */
 export const runtime = 'edge';
 
@@ -17,12 +17,46 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   const type = searchParams.get("type") || "movie";
+  const seasonNum = searchParams.get("season");
+  const similar = searchParams.get("similar");
+  const recommendations = searchParams.get("recommendations");
 
   if (!id) {
     return Response.json({ error: "id required" }, { status: 400 });
   }
 
   try {
+    // Fetch season episodes
+    if (seasonNum && type === "tv") {
+      const res = await fetch(
+        `${TMDB_BASE}/tv/${id}/season/${seasonNum}?api_key=${apiKey}`,
+        { next: { revalidate: 3600 } }
+      );
+      if (!res.ok) throw new Error(`TMDB ${res.status}`);
+      return Response.json(await res.json());
+    }
+
+    // Fetch similar
+    if (similar) {
+      const res = await fetch(
+        `${TMDB_BASE}/${type}/${id}/similar?api_key=${apiKey}&page=1`,
+        { next: { revalidate: 3600 } }
+      );
+      if (!res.ok) throw new Error(`TMDB ${res.status}`);
+      return Response.json(await res.json());
+    }
+
+    // Fetch recommendations
+    if (recommendations) {
+      const res = await fetch(
+        `${TMDB_BASE}/${type}/${id}/recommendations?api_key=${apiKey}&page=1`,
+        { next: { revalidate: 3600 } }
+      );
+      if (!res.ok) throw new Error(`TMDB ${res.status}`);
+      return Response.json(await res.json());
+    }
+
+    // Default: full detail + videos
     const res = await fetch(
       `${TMDB_BASE}/${type}/${id}?api_key=${apiKey}&append_to_response=videos`,
       { next: { revalidate: 3600 } }
