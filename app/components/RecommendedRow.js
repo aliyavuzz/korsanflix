@@ -57,7 +57,7 @@ export default function RecommendedRow({ onCardClick }) {
 
   return (
     <section className="content-row">
-      <h2 className="content-row__title">Sizin Icin Onerililer</h2>
+      <h2 className="content-row__title">Sizin İçin Önerilenler</h2>
       <div className="content-row__wrapper">
         <button className="content-row__arrow content-row__arrow--left" onClick={() => scroll("left")} aria-label="Sola kaydir">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
