@@ -47,6 +47,24 @@ body {
   transition: background 0.3s;
 }
 
+.navbar--solid {
+  background: var(--surface);
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
 .navbar-logo {
   font-size: 1.6rem;
   font-weight: 900;
@@ -55,8 +73,80 @@ body {
   flex-shrink: 0;
 }
 
+.korsan-logo {
+  flex-shrink: 0;
+}
+
 .navbar-search {
   flex-shrink: 0;
+}
+
+/* Discover dropdown */
+.discover-wrapper {
+  position: relative;
+}
+
+.discover-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.discover-btn:hover {
+  border-color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.05);
+}
+
+.discover-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 480px;
+  max-height: 70vh;
+  overflow-y: auto;
+  background: rgba(20, 20, 20, 0.97);
+  border: 1px solid #333;
+  border-radius: 6px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.6);
+  padding: 16px;
+  z-index: 200;
+}
+
+.discover-dropdown__title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.discover-dropdown__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.discover-dropdown__item {
+  padding: 10px 12px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  border-radius: var(--radius);
+  transition: background 0.15s;
+}
+
+.discover-dropdown__item:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
 }
 
 .navbar-search .search-wrapper {
@@ -966,6 +1056,31 @@ body {
   padding: 20px;
 }
 
+/* ======================= GENRE PAGE ======================= */
+.genre-page {
+  padding: 80px 4% 60px;
+}
+
+.genre-page__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.genre-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+.genre-page__loader {
+  text-align: center;
+  padding: 32px 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  min-height: 60px;
+}
+
 /* ======================= RESPONSIVE ======================= */
 @media (max-width: 768px) {
   .hero-banner {
@@ -988,8 +1103,17 @@ body {
   .content-row__title { font-size: 1.1rem; }
 
   .navbar { padding: 0 3%; height: 56px; }
+  .navbar-left { gap: 12px; }
   .navbar-logo { font-size: 1.2rem; }
   .navbar-search .search-wrapper { max-width: 200px; }
+
+  .discover-dropdown {
+    width: calc(100vw - 24px);
+    left: -12px;
+  }
+  .discover-dropdown__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
   .modal-title { font-size: 1.4rem; }
   .modal-info { padding: 16px 20px 24px; }

@@ -9,16 +9,20 @@ const TMDB_IMG = "https://image.tmdb.org/t/p/w342";
  * Netflix tarzı yatay kaydırmalı film/dizi sırası.
  * Sol/sağ ok butonlarıyla kaydırılır.
  */
-export default function ContentRow({ title, type, onCardClick }) {
+export default function ContentRow({ title, type, genreId, onCardClick }) {
   const [items, setItems] = useState([]);
   const rowRef = useRef(null);
 
   useEffect(() => {
-    fetch(`/api/movies?type=${type}`)
+    let url = `/api/movies?type=${type}`;
+    if (type === "genre" && genreId) {
+      url = `/api/movies?type=genre&genre_id=${genreId}`;
+    }
+    fetch(url)
       .then((r) => r.json())
       .then((data) => setItems((data.results || []).filter((m) => m.poster_path)))
       .catch(() => {});
-  }, [type]);
+  }, [type, genreId]);
 
   const scroll = (dir) => {
     if (!rowRef.current) return;

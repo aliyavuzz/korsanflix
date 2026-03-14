@@ -21,7 +21,16 @@ function Player() {
   const [selectedSeason, setSelectedSeason] = useState(Number(season) || 1);
   const [showEpisodes, setShowEpisodes] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [dsLang, setDsLang] = useState("tr");
   const playerRef = useRef(null);
+
+  // Fetch locale for ds_lang
+  useEffect(() => {
+    fetch("/api/locale")
+      .then((r) => r.json())
+      .then((data) => { if (data.dsLang) setDsLang(data.dsLang); })
+      .catch(() => {});
+  }, []);
 
   // Toggle native browser fullscreen on the player container
   const toggleFullscreen = useCallback(() => {
@@ -101,9 +110,9 @@ function Player() {
   if (mediaType === "tv") {
     const s = season || "1";
     const e = episode || "1";
-    embedUrl = `${VIDSRC_BASE}/embed/tv?tmdb=${tmdbId}&season=${s}&episode=${e}&ds_lang=tr`;
+    embedUrl = `${VIDSRC_BASE}/embed/tv?tmdb=${tmdbId}&season=${s}&episode=${e}&ds_lang=${dsLang}`;
   } else {
-    embedUrl = `${VIDSRC_BASE}/embed/movie?tmdb=${tmdbId}&ds_lang=tr`;
+    embedUrl = `${VIDSRC_BASE}/embed/movie?tmdb=${tmdbId}&ds_lang=${dsLang}`;
   }
 
   const title = detail?.title || detail?.name || "";

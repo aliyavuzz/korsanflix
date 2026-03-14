@@ -8,7 +8,7 @@ const TMDB_IMG = "https://image.tmdb.org/t/p/w780";
 const TMDB_IMG_SM = "https://image.tmdb.org/t/p/w300";
 const TMDB_IMG_POSTER = "https://image.tmdb.org/t/p/w342";
 
-export default function DetailModal({ movie, onClose }) {
+export default function DetailModal({ movie, onClose, onSwitchMovie }) {
   const router = useRouter();
   const [detail, setDetail] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -98,10 +98,10 @@ export default function DetailModal({ movie, onClose }) {
   };
 
   const handleSimilarClick = (item) => {
-    // We can't easily swap movie in modal, so navigate
-    const type = item.media_type || mediaType;
-    router.push(`/watch?id=${item.id}&type=${type}`);
-    onClose();
+    // Switch to new movie in the same modal
+    if (onSwitchMovie) {
+      onSwitchMovie({ ...item, media_type: item.media_type || mediaType });
+    }
   };
 
   return (

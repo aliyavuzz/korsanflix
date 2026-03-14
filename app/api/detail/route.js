@@ -1,10 +1,14 @@
 /**
  * GET /api/detail?id=12345&type=movie
- * GET /api/detail?id=12345&type=tv&season=2  (fetch season episodes)
+ * GET /api/detail?id=12345&type=tv&season=2
  * GET /api/detail?id=12345&type=movie&similar=1
  * GET /api/detail?id=12345&type=movie&recommendations=1
+ *
+ * All responses localized via CF-IPCountry header.
  */
-export const runtime = 'edge';
+import { tmdbLangParam } from "../../lib/locale";
+
+export const runtime = "edge";
 
 const TMDB_BASE = "https://api.themoviedb.org/3";
 
@@ -20,6 +24,7 @@ export async function GET(request) {
   const seasonNum = searchParams.get("season");
   const similar = searchParams.get("similar");
   const recommendations = searchParams.get("recommendations");
+  const lang = tmdbLangParam(request);
 
   if (!id) {
     return Response.json({ error: "id required" }, { status: 400 });
@@ -29,7 +34,7 @@ export async function GET(request) {
     // Fetch season episodes
     if (seasonNum && type === "tv") {
       const res = await fetch(
-        `${TMDB_BASE}/tv/${id}/season/${seasonNum}?api_key=${apiKey}`,
+        `${TMDB_BASE}/tv/${id}/season/${seasonNum}?api_key=${apiKey}${lang}`,
         { next: { revalidate: 3600 } }
       );
       if (!res.ok) throw new Error(`TMDB ${res.status}`);
@@ -39,7 +44,7 @@ export async function GET(request) {
     // Fetch similar
     if (similar) {
       const res = await fetch(
-        `${TMDB_BASE}/${type}/${id}/similar?api_key=${apiKey}&page=1`,
+        `${TMDB_BASE}/${type}/${id}/similar?api_key=${apiKey}&page=1${lang}`,
         { next: { revalidate: 3600 } }
       );
       if (!res.ok) throw new Error(`TMDB ${res.status}`);
@@ -49,7 +54,7 @@ export async function GET(request) {
     // Fetch recommendations
     if (recommendations) {
       const res = await fetch(
-        `${TMDB_BASE}/${type}/${id}/recommendations?api_key=${apiKey}&page=1`,
+        `${TMDB_BASE}/${type}/${id}/recommendations?api_key=${apiKey}&page=1${lang}`,
         { next: { revalidate: 3600 } }
       );
       if (!res.ok) throw new Error(`TMDB ${res.status}`);
@@ -58,13 +63,11 @@ export async function GET(request) {
 
     // Default: full detail + videos
     const res = await fetch(
-      `${TMDB_BASE}/${type}/${id}?api_key=${apiKey}&append_to_response=videos`,
+      `${TMDB_BASE}/${type}/${id}?api_key=${apiKey}&append_to_response=videos${lang}`,
       { next: { revalidate: 3600 } }
     );
-
     if (!res.ok) throw new Error(`TMDB ${res.status}`);
-    const data = await res.json();
-    return Response.json(data);
+    return Response.json(await res.json());
   } catch (err) {
     return Response.json({ error: err.message }, { status: 502 });
   }

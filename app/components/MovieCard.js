@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 const TMDB_IMG = "https://image.tmdb.org/t/p/w500";
 const PLACEHOLDER =
@@ -9,19 +8,14 @@ const PLACEHOLDER =
 
 /**
  * A single movie/TV poster card.
- * Clicking navigates to /watch?id=TMDB_ID&type=movie|tv
+ * Always opens DetailModal via onCardClick — NEVER navigates to /watch directly.
  */
-export default function MovieCard({ item }) {
-  const router = useRouter();
-
+export default function MovieCard({ item, onCardClick }) {
   const title = item.title || item.name || "Untitled";
-  const mediaType = item.media_type || "movie";
-  const posterSrc = item.poster_path
-    ? `${TMDB_IMG}${item.poster_path}`
-    : null;
+  const posterSrc = item.poster_path ? `${TMDB_IMG}${item.poster_path}` : null;
 
   const handleClick = () => {
-    router.push(`/watch?id=${item.id}&type=${mediaType}`);
+    if (onCardClick) onCardClick(item);
   };
 
   return (
